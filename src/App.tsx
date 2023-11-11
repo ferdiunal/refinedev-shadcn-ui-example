@@ -1,5 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
-
 import { GitHubBanner, Refine } from "@refinedev/core";
 import routerProvider, {
     DocumentTitleHandler,
@@ -81,7 +79,6 @@ const App: React.FC = () => {
                                     )}
                                 >
                                     <Outlet />
-                                    <Analytics />
                                 </ThemedLayoutV2>
                             }
                         >
