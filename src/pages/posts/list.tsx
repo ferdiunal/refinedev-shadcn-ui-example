@@ -8,6 +8,7 @@ import {
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { FC } from "react";
+import { useUserFriendlyName } from "@refinedev/core";
 
 export const PostList: FC = () => {
     const table = useTable({
@@ -15,13 +16,30 @@ export const PostList: FC = () => {
         enableSorting: true,
         enableFilters: true,
     });
+    const friendly = useUserFriendlyName();
 
     return (
         <List>
             <Table table={table}>
                 <Table.Column
                     accessorKey="id"
-                    header={({ table }) => <Table.CheckAll table={table} />}
+                    id={"select"}
+                    header={({ table }) => (
+                        <Table.CheckAll table={table}>
+                            <Shadcn.CommandItem
+                                onSelect={() => alert("Delete Selected")}
+                            >
+                                Delete Selected (
+                                {table.getSelectedRowModel().rows.length}){" "}
+                                {friendly(
+                                    "Row",
+                                    table.getSelectedRowModel().rows.length > 1
+                                        ? "plural"
+                                        : "singular",
+                                )}
+                            </Shadcn.CommandItem>
+                        </Table.CheckAll>
+                    )}
                     cell={({ row }) => (
                         <Shadcn.Checkbox
                             className="translate-y-[2px]"
@@ -30,11 +48,13 @@ export const PostList: FC = () => {
                                 row.toggleSelected(!!value)
                             }
                             aria-label="Select row"
+                            key={`checkbox-${row.original.id}`}
                         />
                     )}
                 />
                 <Table.Column
                     header={"ID"}
+                    id="id"
                     accessorKey="id"
                     enableSorting
                     enableHiding
@@ -42,6 +62,7 @@ export const PostList: FC = () => {
                 <Table.Column
                     header={"Title"}
                     accessorKey="title"
+                    id="title"
                     enableSorting
                     enableHiding
                     filter={(props: TableFilterProps) => (
@@ -51,6 +72,7 @@ export const PostList: FC = () => {
                 <Table.Column
                     header={"Status"}
                     accessorKey="status"
+                    id="status"
                     enableSorting
                     enableHiding
                     filter={(props: TableFilterProps) => (
@@ -76,6 +98,7 @@ export const PostList: FC = () => {
                 <Table.Column
                     header={"CreatedAt"}
                     accessorKey="createdAt"
+                    id="createdAt"
                     enableSorting
                     enableHiding
                     filter={(props: TableFilterProps) => (
@@ -84,6 +107,7 @@ export const PostList: FC = () => {
                 />
                 <Table.Column
                     accessorKey={"id"}
+                    id={"actions"}
                     cell={({ row: { original } }) => (
                         <Table.Actions>
                             <Table.ShowAction
